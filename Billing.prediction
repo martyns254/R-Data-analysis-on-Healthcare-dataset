@@ -1,0 +1,48 @@
+library(shiny)
+library(randomForest)
+
+# Define UI for billing prediction app
+ui_billing <- fluidPage(
+  titlePanel("Billing Prediction Dashboard"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      h4("Input Patient Data"),
+      numericInput("age", "Age:", value = 30, min = 0, max = 120),
+      selectInput("severity", "Severity:", choices = c("Mild", "Moderate", "Severe")),
+      textInput("disease", "Disease:", value = "Hypertension"),
+      actionButton("predict_billing", "Predict Billing Amount")
+    ),
+    
+    mainPanel(
+      h4("Prediction Results"),
+      verbatimTextOutput("billing_prediction")
+    )
+  )
+)
+
+# Define server for billing prediction app
+server_billing <- function(input, output) {
+  
+  # Load the trained billing model
+  rf_model_billing <- randomForest(
+    Billing.Amount ~ Age + Severity + Disease,
+    data = trainData, ntree = 100
+  )
+  
+  # Make predictions for billing amount
+  observeEvent(input$predict_billing, {
+    billing_data <- data.frame(
+      Age = input$age,
+      Severity = input$severity,
+      Disease = input$disease
+    )
+    billing_amount <- predict(rf_model_billing, billing_data)
+    output$billing_prediction <- renderText({
+      paste("Predicted Billing Amount: $", round(billing_amount, 2))
+    })
+  })
+}
+
+# Run the Billing Prediction App
+shinyApp(ui = ui_billing, server = server_billing)
