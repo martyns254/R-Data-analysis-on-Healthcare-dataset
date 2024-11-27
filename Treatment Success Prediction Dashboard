@@ -69,4 +69,3 @@ rf_model_treatment <- randomForest(
 
 # Run App for Treatment Success Prediction
 shinyApp(ui = ui_treatment, server = server_treatment)
-Model ya nne
