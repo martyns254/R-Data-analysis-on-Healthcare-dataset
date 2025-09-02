@@ -7,7 +7,7 @@ ui <- fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      h4("Input Patient Data"),
+      h4("Input Patient's Data"),
       numericInput("age", "Age:", value = 30, min = 0, max = 120),
       selectInput("gender", "Gender:", choices = c("Male", "Female")),
       selectInput("blood_type", "Blood Type:", choices = c("A", "B", "AB", "O")),
